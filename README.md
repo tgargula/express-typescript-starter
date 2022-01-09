@@ -20,6 +20,6 @@
     ```shell
     npm start
     ```
-    in your terminal. Your application will be listening at: [localhost:3333](https://localhost:3333).
+    in your terminal. Your application will be listening at: [localhost:3000](https://localhost:3000).
 
 **Happy coding! 🎉**
