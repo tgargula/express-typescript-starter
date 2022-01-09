@@ -13,7 +13,7 @@
 2. Install Node (See: [nodejs.org/en/download/](https://nodejs.org/en/download/) or [nodejs.org/en/download/package-manager/](https://nodejs.org/en/download/package-manager/)) if not yet installed.
 3. Open the terminal in the location where you put the project and type:
     ```shell
-    $ cp .env.sample .env && npm init
+    $ echo "# Express Typescript Application" > README.md && cp .env.sample .env && npm i && npm init
     ```
     Then follow the steps prompted by the script.
 4. The application code is located in [./src/index.ts](src/index.ts) file. To start the server, run:
