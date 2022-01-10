@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "This is a simple Express Typescript server generator with precofigured linter and code formatter",
   "main": "index.js",
-  "scripts": {
-    "generate": ""
+  "bin": {
+    "generate": "./index.js"
   },
   "repository": {
     "type": "git",

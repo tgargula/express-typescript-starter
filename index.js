@@ -1,6 +1,10 @@
+#!/usr/bin/env node
+
 const inquirer = require("inquirer");
 const fs = require("fs").promises;
 const path = require("path");
+const { exec } = require("child_process");
+const { promisify } = require("util");
 
 const TEMPLATE = path.normalize("templates/express-typescript-starter");
 
@@ -17,49 +21,44 @@ const QUESTIONS = [
   },
 ];
 
-async function walk(dir, structure = []) {
-  const files = await fs.readdir(dir, { withFileTypes: true });
-  for (const file of files) {
-    if (file.isDirectory()) {
-      const content = await walk(path.join(dir, file.name), []);
-      const substructure = { name: file.name, content };
-      structure.push(substructure);
-    } else {
-      const substructure = { name: file.name };
-      structure.push(substructure);
-      path.join(dir, file.name);
-    }
-  }
-  return structure;
-}
-
-async function generate(readPath, writePath = ".") {
-  console.debug(1);
+async function generate(readPath, writePath) {
   const files = await fs.readdir(path.join(__dirname, readPath));
-  console.debug(2);
+  await fs.mkdir(writePath);
 
-  files.map(async function (file) {
-    const relativeFilePath = path.join(readPath, file);
-    const absoluteFilePath = path.join(__dirname, relativeFilePath)
-    console.debug(3);
 
-    const stat = await fs.stat(absoluteFilePath);
-    console.debug(4);
+  Promise.all(
+    files.map(async function (file) {
+      const relativeFilePath = path.join(readPath, file);
+      const absoluteFilePath = path.join(__dirname, relativeFilePath);
 
-    if (stat.isFile()) {
-      const writeFilePath = path.join(writePath, file);
+      const stat = await fs.stat(absoluteFilePath);
+      const newWritePath = path.join(writePath, file);
 
-      fs.cp(absoluteFilePath, writeFilePath);
-      // const content = await fs.open(relativeFilePath, "utf8");
-
-      // await fs.writeFile(writeFilePath, content, "utf8");
-    }
-  });
+      if (stat.isFile()) {
+        return fs.cp(absoluteFilePath, newWritePath);
+      }
+      if (stat.isDirectory()) {
+        const newReadPath = path.join(readPath, file);
+        return generate(newReadPath, newWritePath);
+      }
+    })
+  );
 }
 
-// async function main() {
-//   console.log(await walk(TEMPLATE));
-// }
+async function main() {
+  const { projectName } = await inquirer.prompt(QUESTIONS);
 
-// main();
-generate(TEMPLATE);
+  console.info("Generating project structure...");
+  await generate(TEMPLATE, projectName);
+
+  console.info("Initializing git repository...");
+  await promisify(exec)(`cd ${projectName} && git init`);
+
+  console.info("Installing dependencies...");
+  await promisify(exec)(`cd ${projectName} && npm i`);
+
+  console.info("Creating initial commit...");
+  exec(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
+}
+
+main();
