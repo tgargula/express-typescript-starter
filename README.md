@@ -16,7 +16,7 @@
     $ cp .env.sample .env && npm init
     ```
     Then follow the steps prompted by the script.
-4. The application code is located in [./src/index.ts](src/index.ts) file. To start the server, run:
+4. The application code is located in [./src/server.ts](src/server.ts) file. To start the server, run:
     ```shell
     npm start
     ```
