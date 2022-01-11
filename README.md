@@ -8,20 +8,24 @@
 * Code formatter (Prettier)
 * Express
 
-## How to begin?
-1. Clone this repository or download and extract zip to your desired location.
-2. Install Node (See: [nodejs.org/en/download/](https://nodejs.org/en/download/) or [nodejs.org/en/download/package-manager/](https://nodejs.org/en/download/package-manager/)) if not yet installed.
-3. Open the terminal in the location where you put the project and type:
+## Requirements
+* Git
+* Node
+* npx
 
-    ```shell
-    echo "# Express Typescript Application" > README.md && cp .env.sample .env && npm i && npm init
-    ```
-    Then follow the steps prompted by the script.
-4. The application code is located in [./src/server.ts](src/server.ts) file. To start the server, run:
+## How to use it?
+1. Open the terminal in the desired location and execute the command below and follow the steps:
 
-    ```shell
-    npm start
-    ```
-    in your terminal. Your application will be listening at: [localhost:3000](https://localhost:3000).
+```shell
+npx @tgargula/express-typescript-starter generate
+```
 
-**Happy coding! 🎉**
+2. The project has been generated! You can now add new endpoints to your server!
+
+3. To run the server execute:
+
+```shell
+npm start
+```
+
+## **Happy coding! 🎉**
