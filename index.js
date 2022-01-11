@@ -59,6 +59,11 @@ async function main() {
 
   console.info("Creating initial commit...");
   exec(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
+
+  console.info();
+  console.info("Your project has been successfully generated! 🚀");
+  console.info(`\tExecute: cd ${projectName}`);
+  console.info("\t\tand start coding!!!");
 }
 
 main();
