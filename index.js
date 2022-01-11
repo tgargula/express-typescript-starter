@@ -6,6 +6,8 @@ const path = require("path");
 const { exec } = require("child_process");
 const { promisify } = require("util");
 
+const execute = promisify(exec);
+
 const TEMPLATE = path.normalize("templates/express-typescript-starter");
 
 const QUESTIONS = [
@@ -19,12 +21,17 @@ const QUESTIONS = [
         return "Project name may only include letters, numbers, underscores and hashes.";
     },
   },
+  {
+    name: "initializeGit",
+    type: "list",
+    message: "Do you want to initialize git? (git required)",
+    choices: ["Yes", "No"],
+  },
 ];
 
 async function generate(readPath, writePath) {
   const files = await fs.readdir(path.join(__dirname, readPath));
   await fs.mkdir(writePath);
-
 
   Promise.all(
     files.map(async function (file) {
@@ -32,7 +39,10 @@ async function generate(readPath, writePath) {
       const absoluteFilePath = path.join(__dirname, relativeFilePath);
 
       const stat = await fs.stat(absoluteFilePath);
-      const newWritePath = path.join(writePath, file);
+      const newWritePath = path.join(
+        writePath,
+        file === ".npmignore" ? ".gitignore" : file
+      );
 
       if (stat.isFile()) {
         return fs.cp(absoluteFilePath, newWritePath);
@@ -46,24 +56,33 @@ async function generate(readPath, writePath) {
 }
 
 async function main() {
-  const { projectName } = await inquirer.prompt(QUESTIONS);
+  const { projectName, initializeGit } = await inquirer.prompt(QUESTIONS);
 
   console.info("Generating project structure...");
   await generate(TEMPLATE, projectName);
 
-  console.info("Initializing git repository...");
-  await promisify(exec)(`cd ${projectName} && git init`);
+  console.info("Copying .env...");
+  await execute(`cp ${path.join(__dirname, TEMPLATE, '.env.sample')} ${projectName}/.env`);
+
+  if (initializeGit === "Yes") {
+    console.info("Initializing git repository...");
+    await execute(`cd ${projectName} && git init`);
+  }
 
   console.info("Installing dependencies...");
-  await promisify(exec)(`cd ${projectName} && npm i`);
+  await execute(`cd ${projectName} && npm i`);
 
-  console.info("Creating initial commit...");
-  exec(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
+  if (initializeGit === "Yes") {
+    console.info("Creating initial commit...");
+    exec(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
+  }
 
   console.info();
   console.info("Your project has been successfully generated! 🚀");
+  console.info();
   console.info(`\tExecute: cd ${projectName}`);
-  console.info("\t\tand start coding!!!");
+  console.info();
+  console.info("and start coding!!!");
 }
 
 main();

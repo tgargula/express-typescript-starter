@@ -1,8 +1,8 @@
 # Express Typescript Starter
 
 ## What's inside?
-* TypeScript preconfiguration (See: [./tsconfig.json](tsconfig.json))
-* Linter (ESLint) (See: [./eslintrc.json](eslintrc.json))
+* TypeScript preconfiguration (See: [./tsconfig.json](templates/express-typescript-starter/tsconfig.json))
+* Linter (ESLint) (See: [./eslintrc.json](templates/express-typescript-starter/eslintrc.json))
     * Airbnb style guide (See: [github.com/airbnb/javascript](https://github.com/airbnb/javascript))
     * Adjusted for developing in Node
 * Code formatter (Prettier)
