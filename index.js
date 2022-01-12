@@ -59,19 +59,20 @@ async function main() {
   await generate(TEMPLATE, projectName);
 
   console.info("Copying .env...");
-  await execute(
-    `cp ${path.join(__dirname, TEMPLATE, ".env.sample")} ${projectName}/.env`
+  await fs.cp(
+    path.join(__dirname, TEMPLATE, ".env.sample"),
+    path.join(projectName, ".env")
   );
 
   if (initializeGit === "Yes") {
     console.info("Initializing git repository...");
     await execute(`cd ${projectName} && git init`);
     console.info("Creating .gitignore...");
-    await fs.writeFile(path.join(__dirname, projectName, ".gitignore"), [
-      "**/node_modules/",
-      "**/dist/",
-      ".env",
-    ]);
+    await fs.writeFile(path.join(projectName, ".gitignore"), [
+      "**/node_modules/\n",
+      "**/dist/\n",
+      ".env\n",
+    ], { flag: 'a+' });
   }
 
   console.info("Installing dependencies...");
