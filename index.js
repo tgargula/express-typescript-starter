@@ -39,10 +39,7 @@ async function generate(readPath, writePath) {
       const absoluteFilePath = path.join(__dirname, relativeFilePath);
 
       const stat = await fs.stat(absoluteFilePath);
-      const newWritePath = path.join(
-        writePath,
-        file === ".npmignore" ? ".gitignore" : file
-      );
+      const newWritePath = path.join(writePath, file);
 
       if (stat.isFile()) {
         return fs.cp(absoluteFilePath, newWritePath);
@@ -62,11 +59,19 @@ async function main() {
   await generate(TEMPLATE, projectName);
 
   console.info("Copying .env...");
-  await execute(`cp ${path.join(__dirname, TEMPLATE, '.env.sample')} ${projectName}/.env`);
+  await execute(
+    `cp ${path.join(__dirname, TEMPLATE, ".env.sample")} ${projectName}/.env`
+  );
 
   if (initializeGit === "Yes") {
     console.info("Initializing git repository...");
     await execute(`cd ${projectName} && git init`);
+    console.info("Creating .gitignore...");
+    await fs.writeFile(path.join(__dirname, projectName, ".gitignore"), [
+      "**/node_modules/",
+      "**/dist/",
+      ".env",
+    ]);
   }
 
   console.info("Installing dependencies...");
