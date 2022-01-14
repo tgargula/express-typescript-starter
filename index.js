@@ -8,6 +8,11 @@ const { promisify } = require("util");
 
 const execute = promisify(exec);
 
+const copyFile = async (source, destination) => {
+  const content = await fs.readFile(source, 'utf8');
+  await fs.writeFile(destination, content, 'utf8');
+}
+
 const TEMPLATE = path.normalize("templates/express-typescript-starter");
 
 const QUESTIONS = [
@@ -42,7 +47,7 @@ async function generate(readPath, writePath) {
       const newWritePath = path.join(writePath, file);
 
       if (stat.isFile()) {
-        return fs.cp(absoluteFilePath, newWritePath);
+        return copyFile(absoluteFilePath, newWritePath);
       }
       if (stat.isDirectory()) {
         const newReadPath = path.join(readPath, file);
@@ -59,9 +64,9 @@ async function main() {
   await generate(TEMPLATE, projectName);
 
   console.info("Copying .env...");
-  await fs.cp(
+  await copyFile(
     path.join(__dirname, TEMPLATE, ".env.sample"),
-    path.join(projectName, ".env")
+    path.join('.', projectName, ".env")
   );
 
   if (initializeGit === "Yes") {
@@ -80,7 +85,7 @@ async function main() {
 
   if (initializeGit === "Yes") {
     console.info("Creating initial commit...");
-    exec(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
+    await execute(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
   }
 
   console.info();
