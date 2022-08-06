@@ -9,9 +9,10 @@ const { promisify } = require("util");
 const execute = promisify(exec);
 
 const copyFile = async (source, destination) => {
-  const content = await fs.readFile(source, 'utf8');
-  await fs.writeFile(destination, content, 'utf8');
-}
+  console.log({ source, destination });
+  const content = await fs.readFile(source, "utf8");
+  await fs.writeFile(destination, content, "utf8");
+};
 
 const TEMPLATE = path.normalize("templates/express-typescript-starter");
 
@@ -66,18 +67,18 @@ async function main() {
   console.info("Copying .env...");
   await copyFile(
     path.join(__dirname, TEMPLATE, ".env.sample"),
-    path.join('.', projectName, ".env")
+    path.join(".", projectName, ".env")
   );
 
   if (initializeGit === "Yes") {
     console.info("Initializing git repository...");
     await execute(`cd ${projectName} && git init`);
     console.info("Creating .gitignore...");
-    await fs.writeFile(path.join(projectName, ".gitignore"), [
-      "**/node_modules/\n",
-      "**/dist/\n",
-      ".env\n",
-    ], { flag: 'a+' });
+    await fs.writeFile(
+      path.join(projectName, ".gitignore"),
+      ["**/node_modules/\n", "**/dist/\n", ".env\n"],
+      { flag: "a+" }
+    );
   }
 
   console.info("Installing dependencies...");
@@ -85,7 +86,9 @@ async function main() {
 
   if (initializeGit === "Yes") {
     console.info("Creating initial commit...");
-    await execute(`cd ${projectName} && git add . && git commit -m "Initial commit"`);
+    await execute(
+      `cd ${projectName} && git add . && git commit -m "Initial commit"`
+    );
   }
 
   console.info();

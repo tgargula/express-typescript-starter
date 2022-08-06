@@ -1,6 +1,6 @@
 {
   "name": "@tgargula/express-typescript-starter",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "This is a simple Express Typescript server generator with precofigured linter and code formatter",
   "main": "index.js",
   "bin": {
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/tgargula/express-typescript-starter#readme",
   "dependencies": {
-    "inquirer": "^8.2.0"
+    "inquirer": "^9.1.0"
   }
 }
